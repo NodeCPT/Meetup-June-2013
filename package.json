@@ -1,0 +1,29 @@
+{
+  "name": "meetup-june-2013",
+  "version": "0.0.1",
+  "description": "Simple Distributed system for NodeJS",
+  "main": "client_helper.js",
+  "dependencies": {
+    "async": "~0.2.9",
+    "request": "~2.21.0",
+    "express": "~3.2.6",
+    "node-uuid": "~1.4.0",
+    "socket.io": "~0.9.16"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://johanndutoit@github.com/NodeCPT/Meetup-June-2013.git"
+  },
+  "author": "Simon Bishop",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "gitHead": "23b0d1437032de18a228791e00ace363290649d1",
+  "bugs": {
+    "url": "https://github.com/NodeCPT/Meetup-June-2013/issues"
+  }
+}

@@ -1,0 +1,226 @@
+<!doctype html>
+<html style="height:100%">
+
+	<head>
+		<link rel="stylesheet" href="css/flowchart.css">
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="css/bootstrap-responsive.css">
+		
+		<script type='text/javascript' src='js/jquery.min.js'></script>
+		<script type='text/javascript' src='js/jquery-ui.min.js'></script>			
+		<script type='text/javascript' src='js/jquery.jsPlumb-1.4.1-all-min.js'></script>
+		<script type='text/javascript' src='js/flowchart-designer.js'></script>
+		<script type='text/javascript' src='js/mustache.js'></script>
+		<script src="/socket.io/socket.io.js"></script>
+		
+		<!-- 
+		<script type='text/javascript' src='js/flowchart.js'></script>
+		<script type='text/javascript' src='js/flowchart-helper.js'></script>
+		 -->
+		
+		
+		<script>
+		
+		var socket;
+		
+		var getProcessorHtml = function(processor, count)
+		{
+			if (count == 0)
+			{
+				processor.name + processor.ip.replace(/\./g,'') + processor.port.toString();
+				
+				return Mustache.render("<div initial_step=\"true\" id=\"{{name}}" + processor.ip.replace(/\./g,'') + processor.port.toString() + "\" class=\"step\">{{name}} (start)</div>", processor);
+			}
+			else
+				return Mustache.render("<div id=\"{{name}}" + processor.ip.replace(/\./g,'') + processor.port.toString() + "\" class=\"step\">{{name}}</div>", processor);
+		}
+		
+		$(document).ready(function() {
+
+			window.flowchartDesigner = new FlowchartDesigner();
+			
+			flowchartDesigner.initialize('body', function(e){
+				if (e == null)
+				{
+					initializeSocket(function(e){
+						
+						if (!e)
+						{
+							//refreshAvailableProcessors();
+							$('.editor-buttons').append('Server listening on: ' + window.location.host);
+						}
+						else
+							addMessage('Initialize socket failed: ' + e, 'error')
+							
+						
+					});
+				}
+				else
+					throw e;
+			});
+			
+		});
+		
+		function initializeSocket(done)
+		{
+			try
+			{
+				socket = io.connect();
+				//socket = io.connect('http://' + window.location.host + ':' + window.location.port);
+				
+				  socket.on('client register result', function (data) {
+					  console.log('client register happened');
+					  console.log(data);
+					  addProcessor(data.client);
+				  });
+				  
+				  socket.on('message', function (data) {
+					  console.log(data);
+					  addMessage(data.message, data.type);
+				  });
+				  
+				  socket.on('step message', function (data) {
+					 
+					  if (data.message == 'Process complete')
+					  {
+						  console.log('proc complete notified');
+						  addMessage('Process with id ' + data.data.id + ' completed successfully', 'success');
+						  
+						  generatePayloadReport(data.data);
+						  
+					  }
+					  else if (data.message == 'Step ran OK')
+					  {
+						  console.log('step complete notified');
+						  addMessage('Step with id ' + data.data.key + ' ran successfully', 'success');
+						  $('#' + data.data.key).css('background-color','#bfffbf');
+					  }
+					  else if (data.message.substring(0, 15) == 'Step run Failed')
+					  {
+						  console.log('step broke notified');
+						  addMessage('Step with id ' + data.data.key + ' failed: ' + data.message, 'error');
+						  $('#' + data.data.key).css('background-color','#DF9496');
+					  }
+					  
+				  });
+				  
+				  done();
+			}
+			catch(e)
+			{
+				 done(e);
+			}
+			
+			  
+			 
+		}
+		
+		function  generatePayloadReport(process)
+		{
+			var payloadDiv = $('<span id=\'payload_div\' class=\'payload-div\'></span>');
+			
+			payloadDiv.append('<span>Payload for process with id: ' + process.id + '</span></br>');
+			
+			for (var i = 0;i < process.payload.length;i++)
+			{
+				var payloadItem  = process.payload[i];
+				payloadDiv.append('<span>timestamp:' + payloadItem.timestamp + ' message: ' + payloadItem.message + '</span></br>');
+			}
+			
+			payloadDiv.append('<a onclick="$(\'#payload_div\').remove()">Close</a>');
+			
+			$('body').append(payloadDiv);
+		}
+		
+		function refreshAvailableProcessors()
+		{
+			addProcessor({ip:'127.0.0.1', port: 4444, name: 'test1'});
+			addProcessor({ip:'127.0.0.2', port: 4444, name: 'test2'});
+			addProcessor({ip:'127.0.0.3', port: 4444, name: 'test3'});
+		}
+		
+		var processorCount = 0;
+		var initialProcessor = null;
+		function addProcessor(processor)
+		{
+			$('body').remove('#' + processor.ip + '_' + processor.name);
+			
+			var processorDiv = $(getProcessorHtml(processor, processorCount));
+			processorDiv.css('left', (processorCount * 120));
+			
+			processorDiv.data('processor', processor);
+			
+			$('body').append(processorDiv);
+			
+			//console.log('draggableOptions');
+			//console.log(draggableOptions);
+			//$('#' + processor.ip.replace(/\./g,'') + '_' + processor.name).draggable(); 
+			
+			flowchartDesigner.addStep(processorDiv);
+			
+			addMessage("Processor " + processor.name + " registered successfully", "success");
+			
+			processorCount++;
+		}
+		
+		function addMessage(text, messageType)
+		{
+			var messageColor = "#D9E2E1";
+			
+			if (messageType == "warning")
+				messageColor = "#F6F4DA";
+			
+			if (messageType == "error")
+				messageColor = "#DF9496";
+			
+			if (messageType == "success")
+				messageColor = "#bfffbf";
+			
+			$('#messagesContainer').prepend("<tr style=\"background-color:" + messageColor + "\" class=\"message-row\"><td class=\"message-cell-med\">" + new Date().toString() + "</td><td class=\"message-cell-sml\">" + messageType + "</td><td>" + text + "</td></tr>");
+		}
+		
+		function execute()
+		{
+			console.log('starting process');
+			socket.emit('start process', getProcess());
+		}
+		
+		function getProcess()
+		{
+			var initialStep = $("[initial_step='true']");
+			
+			console.log('initialStep');
+			console.log(initialStep.data('processor'));
+			
+			return flowchartDesigner.getProcessObject(initialStep.data('processor'));
+		}
+		
+		</script>
+		
+	</head>
+	
+	<body style="height:100%">
+		<span class='editor-buttons'>
+			<img src='/images/execution-icon.png' alt='execute' onclick='execute()'/>
+		</span>
+		<div style="width:100%;height:300px;bottom:0px;border:1px solid #CCC;position:absolute;overflow:auto">
+		<table id="messagesContainerHeader" style="width:100%;font-size:11px">
+			<tr class="message-row">
+				<th class="message-cell-med">
+					Timestamp	
+				</th>
+				<th  class="message-cell-sml">
+					Type	
+				</th>
+				<th>
+					Message
+				</th>
+			</tr>
+			</table>
+			<table id="messagesContainer" style="width:100%;font-size:11px">
+			
+			</table>
+		</div>
+	</body>
+
+</html>
