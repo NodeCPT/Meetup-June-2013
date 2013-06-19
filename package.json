@@ -4,11 +4,11 @@
   "description": "Simple Distributed system for NodeJS",
   "main": "client_helper.js",
   "dependencies": {
-    "async": "~0.2.9",
-    "request": "~2.21.0",
-    "express": "~3.2.6",
-    "node-uuid": "~1.4.0",
-    "socket.io": "~0.9.16"
+    "async": "latest",
+    "request": "latest",
+    "express": "latest",
+    "node-uuid": "latest",
+    "socket.io": "latest"
   },
   "devDependencies": {},
   "scripts": {
