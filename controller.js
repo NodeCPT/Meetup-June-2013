@@ -1,3 +1,6 @@
+
+/*SECTION 1.2 Start a web server using express, link post and get to a controller method
+
 exports.execute_get = function(req, res, done){
 	try
 	{
@@ -25,7 +28,7 @@ exports.execute_post = function(req, res, done){
 		
 		if (method == "register")
 		{
-			
+			//HUB METHOD
 			var client = req.body;
 			client.ip = req.connection.remoteAddress;
 			server_helper.registerClient(client, function(e, response){
@@ -40,6 +43,7 @@ exports.execute_post = function(req, res, done){
 		
 		if (method == "process")
 		{
+			//PROCESSOR METHOD
 			var process = req.body;
 			var stepKey = req.query['step_key'];
 			
@@ -55,6 +59,7 @@ exports.execute_post = function(req, res, done){
 		
 		if (method == "step_notify")
 		{
+			//HUB METHOD
 			console.log('step notify happened');
 			console.log(req.body);
 			var notification = req.body;
@@ -80,12 +85,9 @@ exports.execute_post = function(req, res, done){
 	}
 }
 
-function registerClient(ip, port)
-{
-	
-}
-
 function getResponse(status, message, data)
 {
 	return {'status':status, 'message':message, 'data':data}
 }
+
+*/

@@ -1,5 +1,7 @@
+/* SECTION 0.0 using require to reference other js modules
 var express = require('express'), 
 controller = require('./controller');
+*/
 
 var isServer = true;
 var name = null;
@@ -9,11 +11,17 @@ var serverIP = null;
 var clientIP = null;
 var processorPlugin = null;
 
+/*SECTION 1.1 GLOBAL VARIABLES - available in any js file throughout the system
+
 //these guys are global (as they will contain cached info) and will need to be available throughout the system scope
 client_helper = require('./client_helper');
 server_helper = require('./server_helper');
 shared_helper = require('./shared_helper');
 
+*/
+
+
+/*SECTION 1.1 PASSING ARGUMENTS INTO A NODE PROCESS
 
 process.argv.forEach(function (val, index, array) {
 	
@@ -84,13 +92,10 @@ if (name == null)
 }
 
 
-console.log(isServer);
+*/
 
+/*SECTION 1.2 Start a web server using express, link post and get to a controller method
 
-/*
- * NOTE 1.2: THIS IS HOW TO SETUP AN HTTP SERVER, THAT CAN ROUTE POST REQUEST TO A CONTROLLER OBJECT
- * THIS CODE IS COMMON TO BOTH THE CLIENT AND SERVER MODES
- */
 
 var app = express();
 
@@ -100,7 +105,7 @@ app.use(express.bodyParser());
 //do we want to use cookies
 app.use(express.cookieParser());
 
-//__dirname - global path to the directory the app is running in
+//__dirname - global path to the directory the app is running in, so we can share our landing page
 app.use(express.static(__dirname+'/public'));
 
 // - we set up a route that catches all incoming posts and pass it to the controller
@@ -116,20 +121,26 @@ var ip = server.address();
 console.log('address: ' + ip);
 console.log(ip);
 
+*/
+
 
 
 if (isServer)
 {
+	/*SECTION 1.3 Initializing socket.io, adding events to the socket (via the server helper)
+	
 	var io = require('socket.io').listen(server);
 	console.log('running as a server, socket.io is up');
 	
 	io.sockets.on('connection', function (socket) {
 		  server_helper.initializeSocket(socket);
 		});
-	
+	*/
 }
 else
 {
+	/*SECTION 1.4 Calling the client helper - which demonstrates using the request module against the server
+	
 	var loadClient = function(address){
 		try
 		{
@@ -158,5 +169,7 @@ else
 	else
 		loadClient(clientIP);
 	
-	
+	*/
 }
+
+console.log('System started');

@@ -1,4 +1,4 @@
 Meetup-June-2013
 ================
 
-Web App to Vote on Photos from Flicker for a Practical Intro to NodeJS
+A service bus that demonstrates the use of node for distributed computing or integration
