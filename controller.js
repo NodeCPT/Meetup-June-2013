@@ -1,6 +1,4 @@
 
-/*SECTION 1.2 Start a web server using express, link post and get to a controller method
-
 exports.execute_get = function(req, res, done){
 	try
 	{
@@ -89,5 +87,3 @@ function getResponse(status, message, data)
 {
 	return {'status':status, 'message':message, 'data':data}
 }
-
-*/

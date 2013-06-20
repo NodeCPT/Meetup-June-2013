@@ -3,8 +3,7 @@ var helper = {
 		clients:{},
 		dashboardSocket:null,
 		initializeSocket:function(socket){
-			/*SECTION 1.3 Initializing socket.io, adding events to the socket (via the server helper)
-			 socket.on('start process', function (process) {
+			socket.on('start process', function (process) {
 				  console.log('start process called...');
 				   this.startProcess(process, function(e, processId){
 					   if (!e)
@@ -19,11 +18,9 @@ var helper = {
 				   }.bind(this));
 				  }.bind(this));
 			 dashboardSocket = socket;
-			 */
 		},
 		registerClient:function(client, done)
 		{
-			/*SECTION 1.4 Calling the client helper - which demonstrates using the request module against the server
 			try
 			{
 				console.log('registering client');
@@ -46,13 +43,12 @@ var helper = {
 				console.log(e);
 				done(e);
 			}
-			*/
 		},
 		startProcess:function(process, done)
 		{
 			try
 			{
-				/*SECTION 1.5 Running a process
+				
 				//We generate a random id for the new process
 				var uuid = require('node-uuid').v4();
 				process.id = uuid;
@@ -71,7 +67,6 @@ var helper = {
 			{
 				done(e);
 			}
-			*/
 		},
 		emitMessage: function(message, type, done)
 		{

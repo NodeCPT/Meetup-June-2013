@@ -1,7 +1,6 @@
-/* SECTION 0.0 using require to reference other js modules
 var express = require('express'), 
 controller = require('./controller');
-*/
+
 
 var isServer = true;
 var name = null;
@@ -11,17 +10,10 @@ var serverIP = null;
 var clientIP = null;
 var processorPlugin = null;
 
-/*SECTION 1.1 GLOBAL VARIABLES - available in any js file throughout the system
-
 //these guys are global (as they will contain cached info) and will need to be available throughout the system scope
 client_helper = require('./client_helper');
 server_helper = require('./server_helper');
 shared_helper = require('./shared_helper');
-
-*/
-
-
-/*SECTION 1.1 PASSING ARGUMENTS INTO A NODE PROCESS
 
 process.argv.forEach(function (val, index, array) {
 	
@@ -91,12 +83,6 @@ if (name == null)
 	process.exit(1);
 }
 
-
-*/
-
-/*SECTION 1.2 Start a web server using express, link post and get to a controller method
-
-
 var app = express();
 
 //we need this to parse the body of the http request
@@ -121,13 +107,8 @@ var ip = server.address();
 console.log('address: ' + ip);
 console.log(ip);
 
-*/
-
-
-
 if (isServer)
 {
-	/*SECTION 1.3 Initializing socket.io, adding events to the socket (via the server helper)
 	
 	var io = require('socket.io').listen(server);
 	console.log('running as a server, socket.io is up');
@@ -135,11 +116,10 @@ if (isServer)
 	io.sockets.on('connection', function (socket) {
 		  server_helper.initializeSocket(socket);
 		});
-	*/
+
 }
 else
 {
-	/*SECTION 1.4 Calling the client helper - which demonstrates using the request module against the server
 	
 	var loadClient = function(address){
 		try
@@ -169,7 +149,6 @@ else
 	else
 		loadClient(clientIP);
 	
-	*/
 }
 
 console.log('System started');

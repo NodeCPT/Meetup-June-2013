@@ -3,7 +3,6 @@ var helper = {
 	request:require('request'),
 	register:function(client, done)
 	{
-		/*SECTION 1.4 Calling the client helper - which demonstrates using the request module against the server
 		try
 		{
 			this.client = client;
@@ -25,7 +24,7 @@ var helper = {
 		{
 			done(e);
 		}
-		*/
+
 	},
 	getLocalAddress:function(done)
 	{
@@ -49,7 +48,6 @@ var helper = {
 	},
 	processStep:function(process, key, done)
 	{
-		/*SECTION 1.5 Running a process, lookout for pulling in the plugin code dynamically
 		
 		console.log('processing step with key ' + key);
 		console.log(process);
@@ -124,7 +122,6 @@ var helper = {
 			}
 		}.bind(this));
 		
-		*/
 	},
 	notifyHub:function(data, message, done)
 	{
